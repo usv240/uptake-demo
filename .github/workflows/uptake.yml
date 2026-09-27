@@ -6,6 +6,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write   # re-run the Maven CI on Bob's fix commit
 
 jobs:
   repair:
