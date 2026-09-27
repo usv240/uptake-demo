@@ -1,0 +1,25 @@
+name: Uptake
+on:
+  pull_request:
+    paths: ["**/pom.xml"]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  repair:
+    # Dependabot's upgrade PRs, or any PR a maintainer labels "uptake".
+    if: github.event.pull_request.user.login == 'dependabot[bot]' || contains(github.event.pull_request.labels.*.name, 'uptake')
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - uses: usv240/uptake@main
+        with:
+          bob-api-key: ${{ secrets.BOB_API_KEY }}
+          jdk: "11"
+          rerun-workflow: maven.yml
